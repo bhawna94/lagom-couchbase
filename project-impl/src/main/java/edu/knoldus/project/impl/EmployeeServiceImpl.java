@@ -14,6 +14,8 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import edu.knoldus.project.api.Employee;
 import edu.knoldus.project.api.EmployeeService;
+import javafx.beans.Observable;
+import rx.Observer;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
@@ -69,6 +71,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
             return CompletableFuture.completedFuture("Done");
 
+
         };
     }
 
@@ -93,6 +96,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return request -> {
             bucket.remove(documentId);
             return CompletableFuture.completedFuture("Deleted");
+
         };
     }
 }
