@@ -14,8 +14,7 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import edu.knoldus.project.api.Employee;
 import edu.knoldus.project.api.EmployeeService;
-import javafx.beans.Observable;
-import rx.Observer;
+import rx.Observable;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
@@ -67,8 +66,11 @@ public class EmployeeServiceImpl implements EmployeeService {
             }
 
             JsonObject empData = JsonObject.fromJson(jsonNode.toString());
-            bucket.upsert(JsonDocument.create(empData.get("ename").toString(), empData));
-
+            JsonDocument document = JsonDocument.create(empData.get("ename")
+                    .toString(), empData);
+            Observable<JsonDocument> jsonDocument = bucket.async().upsert(document);
+            System.out.println("observable.............." + jsonDocument);
+            jsonDocument.subscribe();
             return CompletableFuture.completedFuture("Done");
 
 
@@ -79,7 +81,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     public ServiceCall<NotUsed, Employee> getEmployee(String documentId) {
         return request -> {
             Employee emp = null;
-            JsonObject jsonObject = bucket.get(documentId).content();
+            //JsonObject jsonObject = bucket.get(documentId).content();
+            Observable<JsonDocument> jsonObject = bucket.async().get(documentId);
+            jsonObject.subscribe(obj -> obj.content());
             String jsonString = jsonObject.toString();
             try {
                 emp = mapper.readValue(jsonString, Employee.class);
@@ -94,7 +98,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public ServiceCall<NotUsed, String> deleteEmployee(String documentId) {
         return request -> {
-            bucket.remove(documentId);
+            bucket.async().remove(documentId).subscribe();
             return CompletableFuture.completedFuture("Deleted");
 
         };
