@@ -17,6 +17,9 @@ import edu.knoldus.project.api.EmployeeService;
 import rx.Observable;
 
 import java.io.IOException;
+import java.sql.Array;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 
@@ -24,6 +27,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private Cluster cluster;
     private Bucket bucket;
     private ObjectMapper mapper = new ObjectMapper();
+    Observable<Integer> observable = Observable.just(1,2,3,4);
 
     public EmployeeServiceImpl() {
         cluster = couchbaseConnector();
@@ -85,6 +89,8 @@ public class EmployeeServiceImpl implements EmployeeService {
             Observable<JsonDocument> jsonObject = bucket.async().get(documentId);
             jsonObject.subscribe(obj -> obj.content());
             String jsonString = jsonObject.toString();
+
+            
             try {
                 emp = mapper.readValue(jsonString, Employee.class);
             } catch (IOException ex) {
