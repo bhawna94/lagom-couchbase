@@ -60,9 +60,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
     }));
 
-    Observable<Integer> abc = Observable.just(1,2,3,4,5,6);
-
-
     public EmployeeServiceImpl() {
         cluster = couchbaseConnector();
         loadBucket(cluster);
