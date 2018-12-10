@@ -12,16 +12,24 @@ import static com.lightbend.lagom.javadsl.api.transport.Method.POST;
 
 
 public interface EmployeeService extends Service {
+    
     ServiceCall<Employee,String> insert();
+    
     ServiceCall<NotUsed,Employee> getEmployee(String documentId);
+    
+    ServiceCall<NotUsed,Employee> getEmployeeByName(String name);
+    
     ServiceCall <NotUsed,String> deleteEmployee(String documentId);
+    
     @Override
     default Descriptor descriptor() {
         // @formatter:off
         return named("demo").withCalls(
                 Service.restCall(POST,"/api/post",this::insert),
-                Service.restCall(GET,"/api/getEmployee/:documentId",this::getEmployee),
-                Service.restCall(DELETE,"/api/deleteEmployee/:documentId",this::deleteEmployee)
+                Service.restCall(GET,"/api/get/employee/:documentId",this::getEmployee),
+                Service.restCall(DELETE,"/api/delete/employee/:documentId",this::deleteEmployee),
+                Service.restCall(GET,"/api/get/name/:empName",this::getEmployeeByName)
+                
         ).withAutoAcl(true);
     }
 }

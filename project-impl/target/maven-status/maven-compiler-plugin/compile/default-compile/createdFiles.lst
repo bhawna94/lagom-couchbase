@@ -1,2 +1,6 @@
+edu/knoldus/project/impl/repository/EmployeeRepositoryImpl.class
 edu/knoldus/project/impl/EmployeeServiceImpl.class
+edu/knoldus/project/impl/utils/CouchbaseConnector.class
+edu/knoldus/project/impl/utils/RxJavaUtil.class
+edu/knoldus/project/impl/repository/EmployeeRepository.class
 edu/knoldus/project/impl/EmployeeModule.class
