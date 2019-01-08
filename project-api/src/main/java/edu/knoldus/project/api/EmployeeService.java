@@ -13,11 +13,11 @@ import static com.lightbend.lagom.javadsl.api.transport.Method.POST;
 
 public interface EmployeeService extends Service {
     
-    ServiceCall<Employee,String> insert();
+    ServiceCall<Employee,EmployeeResponse> insert();
     
     ServiceCall<NotUsed,Employee> getEmployee(String documentId);
     
-    ServiceCall<NotUsed,Employee> getEmployeeByName(String name);
+    ServiceCall<NotUsed,Employee> getEmployeeByName(String name, String token);
     
     ServiceCall <NotUsed,String> deleteEmployee(String documentId);
     

@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import edu.knoldus.project.api.Employee;
+import edu.knoldus.project.api.EmployeeResponse;
 import edu.knoldus.project.impl.utils.CouchbaseConnector;
 import edu.knoldus.project.impl.utils.RxJavaUtil;
 import rx.Observable;
@@ -19,7 +20,6 @@ import rx.Observable;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class EmployeeRepositoryImpl implements EmployeeRepository {
@@ -53,7 +53,9 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     }
     
     @Override
-    public CompletableFuture<Employee> getEmployeeByName(String name) {
+    public CompletableFuture<Employee> getEmployeeByName(String name, String token) {
+    
+        String value = Authenticate.validateToken(token);
     
         String query = "select empId,empName from Employee Where empName = \"" +name + "\"";
         Observable<JsonObject> row = bucket.async()
@@ -77,7 +79,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     }
     
     @Override
-    public CompletableFuture<String> insertEmployee(Employee employee) {
+    public CompletableFuture<EmployeeResponse> insertEmployee(Employee employee) {
         String json;
             JsonNode jsonNode = null;
             try {
@@ -92,7 +94,9 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         
             bucket.upsert(JsonDocument.create(empData.get("empId").toString(), empData));
 
-            return CompletableFuture.completedFuture("Done");
+            String accessToken = Authenticate.createToken();
+            
+            return CompletableFuture.completedFuture(EmployeeResponse.builder().accessToken(accessToken).build());
 
     }
     

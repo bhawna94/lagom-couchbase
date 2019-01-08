@@ -6,6 +6,7 @@ import com.couchbase.client.java.error.DocumentDoesNotExistException;
 import com.lightbend.lagom.javadsl.api.ServiceCall;
 import com.lightbend.lagom.javadsl.api.transport.NotFound;
 import edu.knoldus.project.api.Employee;
+import edu.knoldus.project.api.EmployeeResponse;
 import edu.knoldus.project.api.EmployeeService;
 import edu.knoldus.project.impl.repository.EmployeeRepository;
 
@@ -25,7 +26,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     
     
     @Override
-    public ServiceCall<Employee, String> insert() {
+    public ServiceCall<Employee, EmployeeResponse> insert() {
         return request -> employeeRepository.insertEmployee(request)
                 .exceptionally(throwable -> {
                     Throwable cause = throwable.getCause();
@@ -49,9 +50,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
     
     @Override
-    public ServiceCall<NotUsed, Employee> getEmployeeByName(String name) {
+    public ServiceCall<NotUsed, Employee> getEmployeeByName(String name, String token) {
         return request ->
-                employeeRepository.getEmployeeByName(name)
+                employeeRepository.getEmployeeByName(name, token)
                         .exceptionally(throwable -> {
                             Throwable cause = throwable.getCause();
                             if (cause instanceof NoSuchElementException)
